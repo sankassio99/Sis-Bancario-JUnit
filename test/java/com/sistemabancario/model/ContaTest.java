@@ -26,7 +26,7 @@ class ContaTest {
             final String esperado = "12345-6";
             instance.setNumero(esperado);
             final String obtido = instance.getNumero();
-            assertEquals(esperado, obtido);
+            assertEquals(esperado, obtido); //Esse Assert serve para verificar se o esperado é igual ao valor obtido
         }
 
 
@@ -37,7 +37,7 @@ class ContaTest {
             assertThrows(IllegalArgumentException.class, () -> instance.setNumero(invalido));
 
             final String obtido = instance.getNumero();
-            assertNotEquals(invalido ,obtido);
+            assertNotEquals(invalido ,obtido);//Esse Assert serve para verificar se o esperado NÃO é igual ao valor obtido
 
         }    
 
@@ -58,13 +58,44 @@ class ContaTest {
             final Conta instance = new Conta();
             final double limite = 1000 ;
             assertThrows(IllegalArgumentException.class, () -> instance.setLimite(limite));
+            //Serve para pegar a exeção emitida pelo método passando um valor invalido.
         }
 
     //R04
         @Test
         void TestMovimentacaoNotNull(){
             final Conta instance = new Conta();
-            assertNotNull(instance.getMovimentacoes());
+            assertNotNull(instance.getMovimentacoes());//verifica se o retorno NÃO é null
+        }
+
+    //R06
+        @Test
+        void testSaldoTotalMaisLimite(){
+            final Conta instance = new Conta();
+            final double limite = 500.0 ;
+            final double esperado = limite ;
+            instance.setEspecial(true);
+            instance.setLimite(limite);
+
+            final double obtido = instance.getSaldoTotal();
+
+            assertEquals(esperado, obtido );
+
+        }    
+
+     //R07
+        @Test
+        void testeDepositoDinheiro(){
+            final double limite = 500.6, deposito = 500.8, esperado =1001.4 ;
+            final Conta instance = new Conta();
+            instance.setEspecial(true);
+            instance.setLimite(limite);
+            instance.depositoDinheiro(deposito);
+
+            final double obtido = instance.getSaldoTotal() ;
+            assertEquals(esperado, obtido, 0.001 );
+
+
         }
 
 }
