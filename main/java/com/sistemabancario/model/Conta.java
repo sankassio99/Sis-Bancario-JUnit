@@ -91,6 +91,7 @@ public class Conta implements Cadastro {
      */
     public void addMovimentacao(Movimentacao movimentacao) {
         // TODO: Você precisa implementar este método
+        movimentacoes.add(movimentacao);
     }
 
     /**
@@ -142,14 +143,18 @@ public class Conta implements Cadastro {
         // TODO: Você precisa implementar este método
     }
 
-    public void depositoDinheiro(final double valor) {
-        // TODO: Você precisa implementar este método
-        Movimentacao movimentacao = new Movimentacao(this);
-        movimentacao.setConfirmada(true);
-        movimentacao.setTipo('c');
-        movimentacao.setValor(valor);
-        saldo += valor ;
-        movimentacoes.add(movimentacao);
+    public void depositoDinheiro(final double valor ) {
+        // TODO: Você precisa implementar este método 
+        if(valor<=0){
+            throw new IllegalArgumentException("É preciso indicar um valor positivo");
+        }else{
+            Movimentacao movimentacao = new Movimentacao(this);
+            movimentacao.setConfirmada(true);
+            movimentacao.setTipo('c');
+            movimentacao.setValor(valor);
+            saldo += valor ;           
+            addMovimentacao(movimentacao);
+        }
 
     }
 

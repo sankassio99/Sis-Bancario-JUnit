@@ -1,13 +1,14 @@
 package com.sistemabancario.model;
 
 /**
- * Representa uma movimentação em uma {@link Conta} bancária, que pode indicar entrada ou saída.
+ * Representa uma movimentação em uma {@link Conta} bancária, que pode indicar
+ * entrada ou saída.
  *
  * <p>
- * <b>NOTA</b>: Mesmo sendo possível obter o saldo somando-se todas as movimentações,
- * à medida que os dados no sistema aumentarem ao longo do tempo, 
- * calcular o saldo pode se tornar uma operação extremamente lenta.
- * Isto normalmente ocorrer quando o histórico de movimentações se torna longo
+ * <b>NOTA</b>: Mesmo sendo possível obter o saldo somando-se todas as
+ * movimentações, à medida que os dados no sistema aumentarem ao longo do tempo,
+ * calcular o saldo pode se tornar uma operação extremamente lenta. Isto
+ * normalmente ocorrer quando o histórico de movimentações se torna longo
  * (principalmente depois de alguns anos).
  * </p>
  * 
@@ -23,15 +24,15 @@ public class Movimentacao implements Cadastro {
     private Conta conta;
 
     /**
-     * Tipo da movimentação deve ser 'C' para crédito (entrada de dinheiro)
-     * ou 'D' para débito (saída de dinheiro). (R01)
+     * Tipo da movimentação deve ser 'C' para crédito (entrada de dinheiro) ou 'D'
+     * para débito (saída de dinheiro). (R01)
      */
     private char tipo;
 
     /**
-     * Valor monetário da movimentação.
-     * O valor não deve ser negativo, uma vez que existe o atributo {@link #tipo}. (R02)
-     * Se o tipo for débito, o valor da movimentação não pode ser superior ao saldo total da {@link Conta}. (R03)
+     * Valor monetário da movimentação. O valor não deve ser negativo, uma vez que
+     * existe o atributo {@link #tipo}. (R02) Se o tipo for débito, o valor da
+     * movimentação não pode ser superior ao saldo total da {@link Conta}. (R03)
      */
     private double valor;
 
@@ -41,12 +42,12 @@ public class Movimentacao implements Cadastro {
      * {@link Conta#addMovimentacao(Movimentacao)}.
      *
      * <ul>
-     *  <li>Movimentacoes devem ser instanciadas como "confirmadas" por padrão. (R04)</li>
-     *  <li>
-     *      Somente operações como depósito em envelope ou em cheque devem ser
-     *      registradas inicialmente como não confirmadas. Após uma operação ser
-     *      confirmada, deve-se atualizar o saldo da conta.
-     *  <li>
+     * <li>Movimentacoes devem ser instanciadas como "confirmadas" por padrão.
+     * (R04)</li>
+     * <li>Somente operações como depósito em envelope ou em cheque devem ser
+     * registradas inicialmente como não confirmadas. Após uma operação ser
+     * confirmada, deve-se atualizar o saldo da conta.
+     * <li>
      * </ul>
      *
      * @see Conta#depositoEnvelope(double)
@@ -56,10 +57,21 @@ public class Movimentacao implements Cadastro {
 
     /**
      * Instancia uma movimentação para uma determinada {@link Conta} bancária. (R05)
+     * 
      * @param conta a {@link Conta} para vincular a movimentação.
      */
-    public Movimentacao(Conta conta){
+    public Movimentacao(Conta conta) {
         // TODO: Você precisa implementar este método
+        this.setConta(conta);
+
+    }
+
+    public Conta getConta() {
+        return conta;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
 
     @Override

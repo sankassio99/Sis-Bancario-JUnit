@@ -3,6 +3,7 @@ package com.sistemabancario.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 /**
  * Classe de teste base para implementação dos testes
  * unitários para a classe {@link Movimentacao}.
@@ -28,4 +29,30 @@ class MovimentacaoTest {
         assertEquals(esperado, obtido);
     }
 
+    //Testar se a conta da movimentação é a mesma que foi instanciada
+    @Test
+    void testContaCerta() {
+        final Conta instance = new Conta();
+        final Movimentacao mov = new Movimentacao(instance);
+
+        final Conta esperado = instance;
+        final Conta obtido = mov.getConta();
+        
+
+        assertEquals(esperado, obtido);
+
+    }
+
+    //Testa passar uma conta diferente da que foi instanciada 
+    @Test
+    void testContaErrada(){
+        final Conta instance = new Conta();
+        final Conta outra = new Conta();
+        final Movimentacao mov  = new Movimentacao(outra);
+
+        final Conta esperado = instance;
+        final Conta obtido = mov.getConta();
+
+        assertNotEquals(esperado, obtido);
+    }
 }

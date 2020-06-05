@@ -3,6 +3,8 @@ package com.sistemabancario.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 /**
  * Classe de teste base para implementação dos testes
  * unitários para a classe {@link Movimentacao}.
@@ -88,6 +90,7 @@ class ContaTest {
         void testeDepositoDinheiro(){
             final double limite = 500.6, deposito = 500.8, esperado =1001.4 ;
             final Conta instance = new Conta();
+
             instance.setEspecial(true);
             instance.setLimite(limite);
             instance.depositoDinheiro(deposito);
@@ -95,7 +98,78 @@ class ContaTest {
             final double obtido = instance.getSaldoTotal() ;
             assertEquals(esperado, obtido, 0.001 );
 
-
         }
+
+    //Testar se no momento do deposito o tipo da movimentacao foi definido como credito
+    @Test
+    void testeDepositoDinheiroTipoDefinidoComoCredito(){
+        final Conta conta = new Conta();
+        conta.depositoDinheiro(500.0);
+
+        final List <Movimentacao> movimentacaos = conta.getMovimentacoes();
+
+        final Movimentacao mov = movimentacaos.get(0);
+
+        final char tipoEsperado = 'c';
+        final char tipObtido = mov.getTipo() ;
+ 
+        assertEquals(tipoEsperado, tipObtido);
+    }     
+
+    //Testar se a movimentação foi cofirmada no momento do deposito 
+    @Test
+    void testeDepositoDinheiroMovimentacaoConfirmada(){
+        final Conta conta = new Conta();
+        conta.depositoDinheiro(500.8);
+
+        final List<Movimentacao> movimentacaos = conta.getMovimentacoes() ;
+        final Movimentacao mov = movimentacaos.get(0);
+
+        final boolean esperado = true ;
+        final boolean obtido = mov.isConfirmada();
+
+        assertEquals(esperado, obtido);
+    }
+
+    //Testar se o valor foi atribuido a MOvimentação
+    @Test
+    void testeDepositoDinheiroValorAtribuidoMovimentacao(){
+        final Conta conta = new Conta();
+        conta.depositoDinheiro(500.8);
+
+        final List<Movimentacao> movimentacaos = conta.getMovimentacoes() ;
+        final Movimentacao mov = movimentacaos.get(0);
+
+        final double esperado = 500.8 ;
+        final double obtido = mov.getValor() ;
+
+        assertEquals(esperado, obtido , 0.001);
+    }
+
+    //Testar se a movimentaçõa foi adcionada no final da lista de movimentações
+    @Test
+    void testeDepositoDinheiroMovimentacaoAdicionada(){
+        final Conta conta = new Conta();
+        final int numeroDeMovimentacoes = 2 ;
+        for(int i = 0; i < numeroDeMovimentacoes; i++ ){
+            conta.depositoDinheiro(500.8);
+        }
+        
+        final List<Movimentacao> movimentacaos = conta.getMovimentacoes();
+        final int obtido = movimentacaos.size();
+
+        final int esperado = numeroDeMovimentacoes ;
+
+        assertEquals(esperado, obtido );
+
+    }
+
+    //Teste passando valor negativo e receber um erro
+    @Test
+    void testeDepositoDinheiroValorNegativo(){
+        final Conta conta = new Conta();
+        
+        assertThrows(IllegalArgumentException.class,()-> conta.depositoDinheiro(-100));
+    }
 
 }
