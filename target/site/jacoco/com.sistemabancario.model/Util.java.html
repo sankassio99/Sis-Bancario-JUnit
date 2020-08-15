@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Util.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sis-Bancario-Junit</a> &gt; <a href="index.source.html" class="el_package">com.sistemabancario.model</a> &gt; <span class="el_source">Util.java</span></div><h1>Util.java</h1><pre class="source lang-java linenums">package com.sistemabancario.model;
+
+/**
+ * Classe com funções de uso geral.
+ * @author Manoel Campos da Silva Filho
+ */
+public final class Util {
+    /**
+     * Construtor privado para evitar que a classe seja instanciada,
+     * uma vez que ela não possui atributos e todos os métodos são estáticos.
+     */
+    private Util(){/**/}
+
+    /**
+     * Calcula um dígito verificador utilizando o algoritmo &lt;a href=&quot;https://pt.wikipedia.org/wiki/Dígito_verificador#Módulo_11&quot;&gt;modulo 11&lt;/a&gt;.
+     * @param numero número para calcular o dígito verificador (em formato como, por exemplo, dddd-d)
+     * @return o dígito verificador calculado
+     */
+    public static String calculaDigitoModulo11(final String numero) {
+        /*Localiza a posição do hífen no número.
+        * O total de algarimos a serem usados para calcular o dígito
+        * verificador será o valor que representa a posição do hífen.*/
+<span class="nc" id="L23">        final int posHifen = numero.indexOf('-');</span>
+<span class="nc" id="L24">        return calculaDigitoModulo11(numero, posHifen);</span>
+    }
+
+    /**
+     * Calcula um dígito verificador utilizando o algoritmo &lt;a href=&quot;https://pt.wikipedia.org/wiki/Dígito_verificador#Módulo_11&quot;&gt;modulo 11&lt;/a&gt;.
+     * @param numero número para calcular o dígito verificador (em formato como, por exemplo, dddd-d)
+     * @param totalAlgarismos número de algarismos a serem usados para calcular o dígito verificador
+     * @return o dígito verificador calculado
+     */
+    public static String calculaDigitoModulo11(final String numero, final int totalAlgarismos) {
+        //Copia todos os algarismos até o total indicado
+<span class="nc" id="L35">        final char[] vetor = numero.substring(0, totalAlgarismos).toCharArray();</span>
+
+<span class="nc" id="L37">        int soma = 0;</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        for (int i = 0; i &lt; vetor.length; i++) {</span>
+            //Uma forma simples de converter int para char
+<span class="nc" id="L40">            final int algarismo = vetor[i] - 48;</span>
+<span class="nc" id="L41">            soma += (vetor.length + 1 - i) * algarismo;</span>
+        }
+
+<span class="nc" id="L44">        final int dig = 11 - (soma % 11);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        return dig &gt; 9 ? &quot;0&quot; : Integer.toString(dig);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

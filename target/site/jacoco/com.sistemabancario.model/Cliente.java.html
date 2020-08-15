@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cliente.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sis-Bancario-Junit</a> &gt; <a href="index.source.html" class="el_package">com.sistemabancario.model</a> &gt; <span class="el_source">Cliente.java</span></div><h1>Cliente.java</h1><pre class="source lang-java linenums">package com.sistemabancario.model;
+
+/**
+ * Cliente do banco tendo os seguintes requisitos:
+ * 
+ * - Ao cadastrar um cliente, deve ser criada ao menos uma conta.
+ * - Não deve-se excluir um cliente se este tiver contas cadastradas.
+ * 
+ * @author Manoel Campos da Silva Filho
+ */
+<span class="nc" id="L11">public class Cliente implements Cadastro {</span>
+
+    private long id;
+
+    /**
+     * CPF que é uma das formas de permitir representar o cliente unicamente.
+     * 
+     * &lt;ul&gt;
+     *      &lt;li&gt;Não pode ser vazio nem nulo, não pode ter todos os dígitos iguais, 
+     *      não pode conter hífens e traços. (R01)&lt;/li&gt;
+     *      &lt;li&gt;
+     *          Ao setar o CPF, deve-se utilizar o método {@link #isCpfValido(String)}
+     *          para verificar se o CPF é válido ou não. Se for inválido, o valor não deve
+     *          ser armazenado e deve-se lançar uma exceção com a mensagem &quot;CPF inválido&quot;.
+     * 
+     *          (R02)
+     *      &lt;/li&gt;
+     * &lt;ul&gt;
+     */
+    private String cpf;
+
+    /**
+     * Nome do cliente.
+     * &lt;ul&gt;
+     *      &lt;li&gt;
+     *          É obrigatório, não podendo ser nulo, vazio nem uma String 
+     *          contendo apenas espaços.
+     *          Pode-se fazer nome = nome.trim() para remover quaisquer espaços 
+     *          vazios no início e fim
+     *          da String. Após isto, pode-se verificar se a String é vazia.
+     *          Se o nome for inválido, deve-se lançar uma exceção informando o erro.
+     * 
+     *          (R03)
+     *      &lt;/li&gt;
+     *      &lt;li&gt;
+     *      
+     *          Deve conter pelo menos um sobrenome. Para isto, depois da
+     *          verificação anterior, basta checar se há ao menos um espaço
+     *          no nome, usando o método contains() da classe String. 
+     *          Se não tiver um sobrenome, deve ser lançada
+     *          uma exceção informando isto. 
+     * 
+     *          (R04)
+     *      &lt;/li&gt;
+     * &lt;/ul&gt;
+     */
+    private String nome;
+
+    @Override
+    public long getId() {
+        // TODO: Você precisa implementar este método
+<span class="nc" id="L62">        return 0;</span>
+    }
+
+    @Override
+    public void setId(long id) {
+        // TODO: Você precisa implementar este método
+<span class="nc" id="L68">    }</span>
+
+    public String getCpf() {
+<span class="nc" id="L71">        return cpf;</span>
+    }
+
+    public void setCpf(String cpf) {
+<span class="nc" id="L75">        this.cpf = cpf;</span>
+<span class="nc" id="L76">    }</span>
+
+    /**
+     * Verifica se um CPF é válido ou não, utilizando o algoritmo denominado Módulo
+     * 11, como descrito em
+     * https://pt.wikipedia.org/wiki/Dígito_verificador#Módulo_11.
+     *
+     * Antes esta função era confusa e extensa. O processo de validação do CPF
+     * envolve calcular o valor do primeiro e do segundo dígito, para então comparar
+     * tais resultados com os dígitos informados pelo usuário. Tal cálculo do
+     * dígito, apesar de ser um código de algumas linhas, é confuso para quem nunca
+     * viu como é feito o processo de validação do CPF. Além disso, tal cálculo
+     * precisa ser feito duas vezes, uma vez para cada dígito. Desta forma,
+     * utilizamos um processo de refatoração para remover o código que calcula um
+     * dígito para outro método chamado calculaDigito, fora do método isCpfValido.
+     * Com isto, evitamos qualquer repetição de código e tornamos o código do método
+     * isCpfValido menor e muito mais legível.
+     *
+     * Ao criar o método calcularDigito, definimos sua visibilidade como private,
+     * para indicar que ele não será acessível fora da classe. Isto porque, o método
+     * é apenas parte do processo de validação do CPF. Ele chamado fora deste
+     * processo não tem utilidade alguma. Desta forma, colocando o método como
+     * private estamos aplicando o conceito de encapsulamento, escondendo tal método
+     * dentro da classe. Assim, as outras classes nem saberão que ele existe. Apenas
+     * o método isCpfValido é que estará visível externamente para outras classes.
+     *
+     * @param cpf CPF a ser validado
+     * @return true se o CPF for válido, false caso contrário.
+     */
+    public boolean isCpfValido(String cpf) {
+        // Remove caracteres não numéricos do CPF
+<span class="nc" id="L107">        cpf = cpf.replaceAll(&quot;\\D&quot;, &quot;&quot;);</span>
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (cpf.length() != 11) {</span>
+<span class="nc" id="L110">            return false;</span>
+        }
+
+<span class="nc" id="L113">        final String d1 = Util.calculaDigitoModulo11(cpf, 9);</span>
+<span class="nc" id="L114">        final String d2 = Util.calculaDigitoModulo11(cpf, 10);</span>
+
+        /* Converte os dígitos calculados de int para String e une (concatena) 
+        os dois numa só String.*/
+<span class="nc" id="L118">        final String digVerificadorCalculado = d1 + d2;</span>
+
+        // Copia os 2 últimos dígitos do CPF informado, pra comparar com os dígitos calculados
+<span class="nc" id="L121">        final String digVerificadorExistente = cpf.substring(cpf.length() - 2);</span>
+
+        /* Compara os 2 últimos dígitos do CPF com os 2 calculados. 
+           Se forem iguais, o CPF é válido. */
+<span class="nc" id="L125">        return digVerificadorExistente.equals(digVerificadorCalculado);</span>
+    }
+
+    public String getNome() {
+<span class="nc" id="L129">        return nome;</span>
+    }
+
+    public void setNome(String nome) {
+<span class="nc" id="L133">        this.nome = nome;</span>
+<span class="nc" id="L134">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

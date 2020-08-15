@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Conta.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Sis-Bancario-Junit</a> &gt; <a href="index.source.html" class="el_package">com.sistemabancario.model</a> &gt; <span class="el_source">Conta.java</span></div><h1>Conta.java</h1><pre class="source lang-java linenums">package com.sistemabancario.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Representa uma conta bancária de um determinado {@link Cliente}, 
+ * tendo os seguintes requisitos:
+ *
+ * &lt;ul&gt;
+ *  &lt;li&gt;Uma conta não pode ser excluída se existirem movimentações.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * @author Manoel Campos da Silva Filho
+ */
+public class Conta implements Cadastro {
+    private long id;
+
+
+    /**
+     * Número que identifica unicamente uma conta em uma determinada agência,
+     * devendo estar no formato 99999-9.  
+     * Se o número não estiver no formato indicado,
+     * o valor não pode ser armazenado e uma exceção deve ser lançada (R01).
+     * O número da agência tem um dígito verificador como no CPF,
+     * mas isto é outro requisito não definido aqui.
+     */
+    private String numero;
+
+    /**
+     * Contas devem ser instanciadas como &quot;Conta Corrente&quot; e não como &quot;Poupança&quot;. (R02)
+     * O valor padrão para atributos boolean é false, assim não precisamos escrever 
+     * código adicional para definir &quot;poupanca&quot; como false.
+     * Mas é preciso escrever o teste para verificar tal situação.  
+     * Com isto, buscamos detectar se uma alteração no código fizer com que 
+     * este requisito deixe de ser atendido.
+     */
+    private boolean poupanca;
+
+    /**
+     * Indica se a conta é especial ou não. Caso seja, ela pode ter {@link #limite}.
+     */
+    private boolean especial;
+
+    /**
+     * Valor que o cliente possui na conta, sem incluir o {@link #limite}.
+     */
+    private double saldo;
+
+    /**
+     * Limite da conta: valor que o cliente pode utilizar além do {@link #saldo} disponível.
+     * Somente contas especiais podem ter limite, ou seja,
+     * o limite de contas &quot;não especiais&quot; não pode ser maior que zero (R03).
+     */
+    private double limite;
+
+    /**
+     * Histórico de movimentações da conta. Deve ser inicializado com uma lista vazia.
+     * Sem isto, ao tentar utilizar a lista, dará o erro NullPointerException.
+     * Um teste deve verificar se, após instanciar uma conta 
+     * usando qualquer um dos construtores, a lista de movimentações não é nula, 
+     * chamando o método {@link #getMovimentacoes()}. (R04)
+     */
+<span class="pc" id="L64">    private List&lt;Movimentacao&gt; movimentacoes = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L66">    public Conta() {</span>
+        // TODO: Você precisa implementar este método
+<span class="fc" id="L68">    }</span>
+
+<span class="nc" id="L70">    public Conta(Agencia agencia, boolean especial, final double limite) {</span>
+        // TODO: Você precisa implementar este método
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Retorna a lista de movimentações.
+     * @return
+     */
+    public List&lt;Movimentacao&gt; getMovimentacoes(){
+<span class="fc" id="L79">        return movimentacoes;</span>
+    }
+
+    /**
+     * Adiciona uma nova movimentação à lista de {@link #movimentacoes}. (R05)
+     * Se a movimentação estiver confirmada, seu valor deve ser:
+     * &lt;ul&gt;
+     *     &lt;li&gt;somado ao saldo da conta caso o tipo da movimentação seja 'C';&lt;/li&gt;
+     *     &lt;li&gt;subtraída do saldo da conta caso o tipo da movimentação seja 'D'.&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param movimentacao {@link Movimentacao} a ser adicionada
+     */
+    public void addMovimentacao(Movimentacao movimentacao) {
+        // TODO: Você precisa implementar este método
+<span class="fc" id="L94">        movimentacoes.add(movimentacao);</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Valor total disponível na conta, representando o {@link #saldo} 
+     * mais o {@link #limite}. (R06)
+     * @return
+     */
+    public double getSaldoTotal() {
+        /* TODO: Você precisa implementar este método. 
+        A linha abaixo deve ser substituída pelo seu código */
+<span class="fc" id="L105">        return saldo + limite ;</span>
+    }
+
+    /**
+     * Registra uma nova movimentação para retirar um determinado valor da conta, caso
+     * o valor seja menor ou igual ao saldo total.
+     * Após realizar um saque, o saldo deve ser atualizado.
+     *
+     * &lt;p&gt;
+     * Se for tentando realizar dois saques ao mesmo tempo com valor igual ao saldo total,
+     * somente o primeiro saque deve ser permitido. 
+     * Isto evita que um cliente que possua dois cartões da mesma conta
+     * tente retirar mais dinheiro do que há disponível na conta. 
+     * Ele poderia tentar fazer isso solicitando a ajuda de outra pessoa. 
+     * Assim, as duas pessoas poderiam tentar ir em caixas diferentes ao mesmo tempo 
+     * para tentar realizar um saque em duplicidade.
+     * &lt;/p&gt;
+     * @param valor valor a ser sacado (deve ser um valor positivo)
+     */
+    public void saque(final double valor) {
+<span class="nc" id="L125">        saldo -= valor;</span>
+<span class="nc" id="L126">    }</span>
+
+    /**
+     * Adiciona uma nova movimentação de depósito em envelope
+     * (que deve ser confirmada posteriormente por um funcionário do banco).
+     * @param valor valor a ser depositado (deve ser um valor positivo)
+     */
+    public void depositoEnvelope(final double valor) {
+        // TODO: Você precisa implementar este método
+<span class="nc" id="L135">    }</span>
+
+    /**
+     * Adiciona uma nova movimentação de depósito em cheque
+     * (que deve ser confirmada posteriormente por um funcionário do banco).
+     * @param valor valor a ser depositado (deve ser um valor positivo)
+     */
+    public void depositoCheque(final double valor) {
+        // TODO: Você precisa implementar este método
+<span class="nc" id="L144">    }</span>
+
+    public void depositoDinheiro(final double valor ) {
+        // TODO: Você precisa implementar este método 
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if(valor&lt;=0){</span>
+<span class="fc" id="L149">            throw new IllegalArgumentException(&quot;É preciso indicar um valor positivo&quot;);</span>
+        }else{
+<span class="fc" id="L151">            Movimentacao movimentacao = new Movimentacao(this);</span>
+<span class="fc" id="L152">            movimentacao.setConfirmada(true);</span>
+<span class="fc" id="L153">            movimentacao.setTipo('c');</span>
+<span class="fc" id="L154">            movimentacao.setValor(valor);</span>
+<span class="fc" id="L155">            saldo += valor ;           </span>
+<span class="fc" id="L156">            addMovimentacao(movimentacao);</span>
+        }
+
+<span class="fc" id="L159">    }</span>
+
+    @Override
+    public long getId() {
+<span class="nc" id="L163">        return id;</span>
+    }
+
+    @Override
+    public void setId(long id) {
+<span class="nc" id="L168">        this.id = id;</span>
+<span class="nc" id="L169">    }</span>
+
+    public String getNumero() {
+<span class="fc" id="L172">        return numero;</span>
+    }
+
+    public void setNumero(String numero) {
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if(!numero.matches(&quot;\\d{5}-\\d&quot;)){</span>
+<span class="fc" id="L177">            throw new IllegalArgumentException(&quot;Numero Invalido, o formato deverá ser xxxxx-x&quot;);</span>
+        }
+<span class="fc" id="L179">        this.numero = numero;</span>
+<span class="fc" id="L180">    }</span>
+
+    public boolean isPoupanca() {
+<span class="nc" id="L183">        return poupanca;</span>
+    }
+
+    public void setPoupanca(boolean poupanca) {
+<span class="nc" id="L187">        this.poupanca = poupanca;</span>
+<span class="nc" id="L188">    }</span>
+
+    public boolean isEspecial() {
+<span class="nc" id="L191">        return especial;</span>
+    }
+
+    public void setEspecial(boolean especial) {
+<span class="fc" id="L195">        this.especial = especial;</span>
+<span class="fc" id="L196">    }</span>
+
+    public double getSaldo() {
+<span class="nc" id="L199">        return saldo;</span>
+    }
+
+    public double getLimite() {
+<span class="fc" id="L203">        return limite;</span>
+    }
+
+    public void setLimite(double limite) {  
+<span class="pc bpc" id="L207" title="1 of 4 branches missed.">        if(!especial &amp;&amp; limite&gt;0){</span>
+<span class="fc" id="L208">            throw new IllegalArgumentException(&quot;Somente contas especiais podem ter limite&quot;);</span>
+        }      
+<span class="fc" id="L210">        this.limite = limite;</span>
+<span class="fc" id="L211">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

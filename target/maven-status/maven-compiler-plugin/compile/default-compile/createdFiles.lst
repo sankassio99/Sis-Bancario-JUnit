@@ -1,0 +1,7 @@
+com\sistemabancario\model\Cadastro.class
+com\sistemabancario\model\Banco.class
+com\sistemabancario\model\Conta.class
+com\sistemabancario\model\Cliente.class
+com\sistemabancario\model\Agencia.class
+com\sistemabancario\model\Util.class
+com\sistemabancario\model\Movimentacao.class
