@@ -1,4 +1,4 @@
-# Sis-Bancario-JUnit
+# Sis-Bancario-JUnit ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/sankassio99/Sis-Bancario-JUnit/Java%20CI%20with%20Maven)
 Tarefa da materia de Teste de Software
 
 
